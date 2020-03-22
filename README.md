@@ -2,7 +2,7 @@ Rust Libre Storage
 ----
 Free file share platform
 
-# Run development
+## Run development
 
 > rustup default nightly
 > $env:DATABASE_URL='libre_storage.db'; cargo run
@@ -17,3 +17,7 @@ Free file share platform
 1. > cargo install diesel_cli --no-default-features --features "sqlite"
 1. > echo DATABASE_URL=file:libre_storage.db > .env
 1. > diesel migration run --database-url="libre_storage.db"
+
+## License
+
+GNU AGPLv3
