@@ -1,10 +1,16 @@
 Rust Libre Storage
 ----
-Free file share platform
+Free file share platform. Designed for single-board PCs like Raspberry Pi.
 
-## Run development
+Features:
+* Default filesystem as storage (fail-safe for in-home usage)
+* SQLite for indexing (fast index, sharing)
+* webdav for mobile apps
+
+## Run development version
 
 ```
+> npm run build
 > rustup default nightly
 > $env:DATABASE_URL='libre_storage.db'; cargo run
 ```

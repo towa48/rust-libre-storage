@@ -7,11 +7,11 @@ pub struct Credentials<'a> {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct TokenResponse<'a> {
-    token: &'a str,
+pub struct TokenResponse<'b> {
+    token: &'b str,
 }
 
-impl<'a> TokenResponse<'a> {
+impl<'b> TokenResponse<'b> {
     fn new(token: &str) -> TokenResponse {
         TokenResponse { token: token }
     }
@@ -20,6 +20,6 @@ impl<'a> TokenResponse<'a> {
 #[post("/token", format = "json", data = "<request>")]
 pub fn token(request: Json<Credentials>) -> Json<TokenResponse> {
     // TODO: should we copy string here?
-    let response = TokenResponse::new(&request.user);
+    let response = TokenResponse::new(&request.user.clone());
     Json(response)
 }

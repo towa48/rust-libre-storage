@@ -1,0 +1,12 @@
+{
+  "name": "rust-libre-storage",
+  "version": "0.1.0",
+  "description": "Free file share platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bash -c \"mkdir -p dist/browser && cp -t dist/browser src-frontend/index.html src-frontend/styles/base.css src-frontend/app/entry.js\""
+  },
+  "author": "Anton Prilepsky",
+  "license": "GNU AGPLv3"
+}

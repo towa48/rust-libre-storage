@@ -1,0 +1,14 @@
+html, body { margin:0; padding:0; }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.container .row {
+    align-self: stretch;
+    padding-bottom: 10px;
+}
+.btn {
+    cursor: pointer;
+}

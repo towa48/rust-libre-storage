@@ -12,6 +12,7 @@ mod auth;
 
 use diesel::prelude::*;
 use dotenv::dotenv;
+use rocket_contrib::serve::StaticFiles;
 use std::env;
 
 fn establish_connection() -> SqliteConnection {
@@ -22,16 +23,11 @@ fn establish_connection() -> SqliteConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
-
 fn main() {
     let connection = establish_connection();
 
     rocket::ignite()
-        .mount("/", routes![index])
+        .mount("/", StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/dist/browser")))
         .mount("/auth", routes![auth::token])
         .launch();
 }
