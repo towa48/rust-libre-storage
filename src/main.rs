@@ -5,7 +5,8 @@
 extern crate dotenv;
 
 //pub mod models;
-pub mod schema;
+mod schema;
+mod auth;
 
 use diesel::prelude::*;
 use dotenv::dotenv;
@@ -27,5 +28,8 @@ fn index() -> &'static str {
 fn main() {
     let connection = establish_connection();
 
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .mount("/", routes![index])
+        .mount("/auth", routes![auth::token])
+        .launch();
 }
