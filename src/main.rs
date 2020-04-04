@@ -8,7 +8,8 @@ extern crate dotenv;
 
 //pub mod models;
 mod schema;
-mod auth;
+mod routes;
+pub mod lib_http;
 
 use diesel::prelude::*;
 use dotenv::dotenv;
@@ -24,10 +25,10 @@ fn establish_connection() -> SqliteConnection {
 }
 
 fn main() {
-    let connection = establish_connection();
+    //let connection = establish_connection();
 
     rocket::ignite()
         .mount("/", StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/dist/browser")))
-        .mount("/auth", routes![auth::token])
+        .mount("/auth", routes![routes::auth::token])
         .launch();
 }

@@ -1,4 +1,10 @@
 use rocket_contrib::json::Json;
+use crate::lib_http::ApiResult;
+
+//const ERR_INVALID_REQUEST: &'static str = "invalid_request";
+//const ERR_ACCESS_DENIED: &'static str = "access_denied";
+const ERR_UNAUTHORIZED: &'static str = "unauthorized";
+const ERR_GENERIC: &'static str = "server_error";
 
 #[derive(Serialize, Deserialize)]
 pub struct Credentials<'a> {
@@ -18,8 +24,7 @@ impl<'b> TokenResponse<'b> {
 }
 
 #[post("/token", format = "json", data = "<request>")]
-pub fn token(request: Json<Credentials>) -> Json<TokenResponse> {
-    // TODO: should we copy string here?
+pub fn token(request: Json<Credentials>) -> ApiResult<TokenResponse> {
     let response = TokenResponse::new(&request.user.clone());
-    Json(response)
+    Ok(Json(response))
 }
