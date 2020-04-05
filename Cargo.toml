@@ -9,10 +9,15 @@ license = "GNU AGPLv3"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket = "0.4.4"
-rocket_contrib = { version = "0.4.4", features = ["json","serve"] }
+rocket = "0.4"
+rocket_contrib = { version = "0.4", features = ["json","serve"] }
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-diesel = { version = "1.4.2", features = ["sqlite"] }
+diesel = { version = "1.4", features = ["sqlite"] }
 dotenv = "0.10"
+pbkdf2 = "0.3"
+base64 = "0.12"
+rand = "0.7"
+hmac = "0.7"
+sha2 = "0.8"

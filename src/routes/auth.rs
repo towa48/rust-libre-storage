@@ -1,5 +1,6 @@
 use rocket_contrib::json::Json;
 use crate::lib_http::ApiResult;
+use crate::crypto::{create_password_hash, PasswordResult};
 
 //const ERR_INVALID_REQUEST: &'static str = "invalid_request";
 //const ERR_ACCESS_DENIED: &'static str = "access_denied";
@@ -25,6 +26,7 @@ impl<'b> TokenResponse<'b> {
 
 #[post("/token", format = "json", data = "<request>")]
 pub fn token(request: Json<Credentials>) -> ApiResult<TokenResponse> {
-    let response = TokenResponse::new(&request.user.clone());
+    let res: PasswordResult = create_password_hash(&request.password);
+    let response = TokenResponse::new(&res.password);
     Ok(Json(response))
 }

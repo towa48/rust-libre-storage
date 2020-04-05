@@ -1,15 +1,21 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 #[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate diesel;
+extern crate rocket_contrib;
 extern crate dotenv;
+extern crate pbkdf2;
+extern crate base64;
+extern crate rand;
+extern crate hmac;
+extern crate sha2;
 
 //pub mod models;
 mod schema;
 mod routes;
 pub mod lib_http;
+pub mod crypto;
 
 use diesel::prelude::*;
 use dotenv::dotenv;
