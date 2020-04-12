@@ -37,8 +37,10 @@ fn to_base64<T: AsRef<[u8]>>(value: T) -> String {
 
 #[inline]
 fn to_owned_str<'a>(value: String) -> &'a str {
-    let bytes = &value.as_bytes();
-    unsafe { str::from_utf8_unchecked(bytes.to_owned()) }
+    unsafe {
+        let bytes = &value.as_bytes();
+        return str::from_utf8_unchecked(&bytes.to_owned());
+    }
 }
 
 pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
@@ -49,12 +51,12 @@ pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
     // TODO: how to convert array to AsRef<[u8]>?
     let keyVec: Vec<u8> = derived_key.iter().cloned().collect();
 
-    let password_hash = to_base64(keyVec).to_owned();
+    let password_hash = to_base64(keyVec);
     let salt_hash = to_base64(salt);
 
     // trying to copy String value
-    let x = to_owned_str::<'a>(password_hash);
-    let y = to_owned_str::<'a>(salt_hash);
+    let x = to_owned_str(password_hash);
+    let y = to_owned_str(salt_hash);
 
     //let xv = password_hash.to_owned().as_bytes(); 
     //let yv = salt_hash.as_bytes();
