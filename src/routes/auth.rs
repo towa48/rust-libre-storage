@@ -1,6 +1,7 @@
 use rocket_contrib::json::Json;
 use crate::lib_http::ApiResult;
 use crate::crypto::{create_password_hash, PasswordResult};
+use std::borrow::Cow;
 
 //const ERR_INVALID_REQUEST: &'static str = "invalid_request";
 //const ERR_ACCESS_DENIED: &'static str = "access_denied";
@@ -14,19 +15,22 @@ pub struct Credentials<'a> {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct TokenResponse<'b> {
-    token: &'b str,
+pub struct TokenResponse<'a> {
+    token: Cow<'a, str>,
 }
 
-impl<'b> TokenResponse<'b> {
-    fn new(token: &str) -> TokenResponse {
-        TokenResponse { token: token }
+impl<'a> TokenResponse<'a> {
+    fn new<S>(token: S) -> TokenResponse<'a>
+        where S: Into<Cow<'a, str>>
+    {
+        TokenResponse { token: token.into() }
     }
 }
 
 #[post("/token", format = "json", data = "<request>")]
 pub fn token(request: Json<Credentials>) -> ApiResult<TokenResponse> {
     let res: PasswordResult = create_password_hash(&request.password);
-    let response = TokenResponse::new(&res.password);
+    println!("{}", res.salt);
+    let response = TokenResponse::new(res.password);
     Ok(Json(response))
 }
