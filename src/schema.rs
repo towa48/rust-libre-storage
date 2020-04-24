@@ -1,9 +1,9 @@
 table! {
     files (id) {
-        id -> Integer,
+        id -> BigInt,
         name -> Text,
-        folder_id -> Integer,
-        owner_id -> Integer,
+        folder_id -> BigInt,
+        owner_id -> BigInt,
         date_created -> Timestamp,
         date_validated -> Nullable<Timestamp>,
         sha1_hash -> Text,
@@ -12,9 +12,9 @@ table! {
 
 table! {
     folders (id) {
-        id -> Integer,
+        id -> BigInt,
         name -> Text,
-        owner_id -> Integer,
+        owner_id -> BigInt,
         date_created -> Timestamp,
         date_validated -> Nullable<Timestamp>,
         depth -> Integer,
@@ -25,7 +25,7 @@ table! {
 
 table! {
     users (id) {
-        id -> Integer,
+        id -> BigInt,
         username -> Text,
         date_created -> Timestamp,
         salt -> Text,
