@@ -31,6 +31,7 @@ table! {
         salt -> Text,
         password_hash -> Text,
         is_admin -> Bool,
+        should_initialize -> Bool,
     }
 }
 
