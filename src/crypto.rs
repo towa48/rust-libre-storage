@@ -44,24 +44,22 @@ fn from_base64(value: &str) -> Vec<u8> {
 
 pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
     let salt = create_salt();
-    let mut derived_key = [0u8; KEY_LEN];
-    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), &salt, ITERATIONS, &mut derived_key);
+    let password_hash = get_password_hash_internal(password, &salt);
 
-    // TODO: how to convert array to AsRef<[u8]>?
-    let keyVec: Vec<u8> = derived_key.iter().cloned().collect();
-
-    let password_hash = to_base64(keyVec);
     let salt_hash = to_base64(salt);
-
     PasswordResult::new(password_hash, salt_hash)
 }
 
 pub fn get_password_hash(password: &str, salt_hash: &str) -> String {
+    get_password_hash_internal(password, &from_base64(salt_hash))
+}
+
+fn get_password_hash_internal(password: &str, salt: &[u8]) -> String {
     let mut derived_key = [0u8; KEY_LEN];
-    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), &from_base64(salt_hash), ITERATIONS, &mut derived_key);
+    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), salt, ITERATIONS, &mut derived_key);
 
     // TODO: how to convert array to AsRef<[u8]>?
-    let keyVec: Vec<u8> = derived_key.iter().cloned().collect();
+    let key_vec: Vec<u8> = derived_key.iter().cloned().collect();
 
-    to_base64(keyVec)
+    to_base64(key_vec)
 }

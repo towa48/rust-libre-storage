@@ -17,6 +17,7 @@ mod routes;
 pub mod lib_http;
 pub mod crypto;
 pub mod providers;
+pub mod utils;
 
 use rocket_contrib::serve::StaticFiles;
 use std::env;
@@ -25,5 +26,6 @@ fn main() {
     rocket::ignite()
         .mount("/", StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/dist/browser")))
         .mount("/auth", routes![routes::auth::token])
+        .mount("/webdav", routes![routes::webdav::list])
         .launch();
 }

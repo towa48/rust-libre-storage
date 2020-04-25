@@ -7,7 +7,7 @@ use std::borrow::Cow;
 //const ERR_INVALID_REQUEST: &'static str = "invalid_request";
 //const ERR_ACCESS_DENIED: &'static str = "access_denied";
 const ERR_UNAUTHORIZED: &'static str = "unauthorized";
-const ERR_GENERIC: &'static str = "server_error";
+//const ERR_GENERIC: &'static str = "server_error";
 
 #[derive(Serialize, Deserialize)]
 pub struct Credentials<'a> {
