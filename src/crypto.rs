@@ -1,5 +1,5 @@
 use std::u8;
-use base64::encode;
+use base64::{encode,decode};
 use rand::prelude::*;
 use sha2::Sha512;
 use hmac::{Hmac};
@@ -38,6 +38,10 @@ fn to_base64<T: AsRef<[u8]>>(value: T) -> String {
     encode(value)
 }
 
+fn from_base64(value: &str) -> Vec<u8> {
+    decode(value).unwrap()
+}
+
 pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
     let salt = create_salt();
     let mut derived_key = [0u8; KEY_LEN];
@@ -52,9 +56,9 @@ pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
     PasswordResult::new(password_hash, salt_hash)
 }
 
-pub fn get_password_hash(password: &str, salt: &str) -> String {
+pub fn get_password_hash(password: &str, salt_hash: &str) -> String {
     let mut derived_key = [0u8; KEY_LEN];
-    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), salt.as_bytes(), ITERATIONS, &mut derived_key);
+    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), &from_base64(salt_hash), ITERATIONS, &mut derived_key);
 
     // TODO: how to convert array to AsRef<[u8]>?
     let keyVec: Vec<u8> = derived_key.iter().cloned().collect();
