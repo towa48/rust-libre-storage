@@ -51,3 +51,13 @@ pub fn create_password_hash<'a>(password: &str) -> PasswordResult<'a> {
 
     PasswordResult::new(password_hash, salt_hash)
 }
+
+pub fn get_password_hash(password: &str, salt: &str) -> String {
+    let mut derived_key = [0u8; KEY_LEN];
+    pbkdf2::pbkdf2::<HmacSha512>(password.as_bytes(), salt.as_bytes(), ITERATIONS, &mut derived_key);
+
+    // TODO: how to convert array to AsRef<[u8]>?
+    let keyVec: Vec<u8> = derived_key.iter().cloned().collect();
+
+    to_base64(keyVec)
+}

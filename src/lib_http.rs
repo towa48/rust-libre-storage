@@ -7,9 +7,9 @@ pub struct ApiError {
 }
 
 impl ApiError {
-    fn new(error: &'static str, error_description: &'static str) -> ApiError {
+    pub fn new(error: &'static str, error_description: &'static str) -> ApiError {
         ApiError { error: error, error_description: error_description }
     }
 }
 
-pub type ApiResult<T> = Result<Json<T>, ApiError>;
+pub type ApiResult<T> = Result<Json<T>, Json<ApiError>>;
