@@ -24,8 +24,14 @@
             },
             body: JSON.stringify(credentials)
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            return Promise.all([Promise.resolve(response.status), response.json()]);
+        })
+        .then(([status, data]) => {
+            if (status !== 200) {
+                console.log(data.error);
+                return;
+            }
             console.log(data.token);
         });
     }

@@ -1,5 +1,6 @@
 use rocket_contrib::json::Json;
-use crate::lib_http::{ApiResult,ApiError};
+use rocket::http::Status;
+use crate::lib_http::ApiResponse;
 use crate::crypto::get_password_hash;
 use crate::providers::users::{get_user,User};
 use std::borrow::Cow;
@@ -29,15 +30,17 @@ impl<'a> TokenResponse<'a> {
 }
 
 #[post("/token", format = "json", data = "<request>")]
-pub fn token(request: Json<Credentials>) -> ApiResult<TokenResponse> {
+pub fn token(request: Json<Credentials>) -> ApiResponse<TokenResponse> {
     let user: Option<User> = get_user(request.user.to_owned());
     if user.is_none() {
-        return Err(Json(ApiError::new(ERR_UNAUTHORIZED, "")));
+        return ApiResponse::<TokenResponse>::err(ERR_UNAUTHORIZED, "", Status::Unauthorized);
     }
 
     let exist_user = user.unwrap();
     let password_hash: String = get_password_hash(request.password, &exist_user.salt);
-    let result = if password_hash == exist_user.password_hash { "done" } else { "fail" };
-    let response = TokenResponse::new(result);
-    Ok(Json(response))
+    if password_hash != exist_user.password_hash {
+        return ApiResponse::<TokenResponse>::err(ERR_UNAUTHORIZED, "", Status::Unauthorized);
+    }
+
+    ApiResponse::<TokenResponse>::ok(TokenResponse::new("TOKEN"))
 }
