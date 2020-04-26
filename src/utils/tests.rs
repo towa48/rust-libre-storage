@@ -2,7 +2,6 @@
 mod test {
     use rocket::local::Client;
     use rocket::http::Status;
-    use rocket::outcome::Outcome::*;
     use rocket::request::FromRequest;
 
     use crate::utils::webdav_auth::WebDavAuth;
@@ -16,7 +15,7 @@ mod test {
         let outcome = WebDavAuth::from_request(req.inner());
 
         assert_eq!(outcome.is_success(), false);
-        //assert_eq!(outcome.as_ref(), Failure((Status::Unauthorized, "Wrong credentials")));
+        assert_eq!(outcome.failed(), Some((Status::Unauthorized, "No basic authorization")));
     }
 }
 
