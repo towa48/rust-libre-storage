@@ -7,6 +7,7 @@ table! {
         date_created -> Timestamp,
         date_validated -> Nullable<Timestamp>,
         sha1_hash -> Text,
+        path -> Text,
     }
 }
 
@@ -17,9 +18,9 @@ table! {
         owner_id -> BigInt,
         date_created -> Timestamp,
         date_validated -> Nullable<Timestamp>,
+        parent_id -> Nullable<BigInt>,
+        path -> Text,
         depth -> Integer,
-        lft -> Integer,
-        rgt -> Integer,
     }
 }
 

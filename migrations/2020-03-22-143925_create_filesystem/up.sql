@@ -6,9 +6,9 @@ CREATE TABLE folders (
     owner_id INTEGER NOT NULL REFERENCES users(id),
     date_created TIMESTAMP NOT NULL,
     date_validated TIMESTAMP,
+    parent_id INTEGER,
+    path TEXT NOT NULL,
     depth INTEGER NOT NULL DEFAULT 0,
-    lft INTEGER NOT NULL,
-    rgt INTEGER NOT NULL,
 
     UNIQUE(owner_id, name, depth)
 );
@@ -20,5 +20,8 @@ CREATE TABLE files (
     owner_id INTEGER NOT NULL REFERENCES users(id),
     date_created TIMESTAMP NOT NULL,
     date_validated TIMESTAMP,
-    sha1_hash TEXT NOT NULL
+    sha1_hash TEXT NOT NULL,
+    path TEXT NOT NULL,
+
+    UNIQUE(owner_id, name, folder_id)
 );
