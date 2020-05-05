@@ -2,7 +2,8 @@ use rocket_contrib::json::Json;
 use rocket::http::Status;
 use crate::lib_http::ApiResponse;
 use crate::crypto::get_password_hash;
-use crate::providers::users::{get_user,User};
+use crate::models::User;
+use crate::providers::{UsersProvider, IUsersProvider};
 use std::borrow::Cow;
 
 //const ERR_INVALID_REQUEST: &'static str = "invalid_request";
@@ -30,8 +31,10 @@ impl<'a> TokenResponse<'a> {
 }
 
 #[post("/token", format = "json", data = "<request>")]
-pub fn token(request: Json<Credentials>) -> ApiResponse<TokenResponse> {
-    let user: Option<User> = get_user(request.user.to_owned());
+pub fn token(request: Json<Credentials>, provider: UsersProvider) -> ApiResponse<TokenResponse> {
+    use crate::providers::prelude::*;
+
+    let user: Option<User> = provider.get_user(request.user.to_owned());
     if user.is_none() {
         return ApiResponse::<TokenResponse>::err(ERR_UNAUTHORIZED, "", Status::Unauthorized);
     }

@@ -12,7 +12,7 @@ Features:
 ```
 > npm run build
 > rustup default nightly
-> $env:DATABASE_URL='libre_storage.db'; cargo run
+> cargo run
 ```
 
 ## Contrib for Windows

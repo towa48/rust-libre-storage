@@ -1,0 +1,2 @@
+[global.databases]
+DATABASE_URL = { url = "libre_storage.db" }

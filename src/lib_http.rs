@@ -2,8 +2,9 @@ use rocket::http::{Status, ContentType};
 use rocket::request::{Request};
 use rocket::response::{Responder, Response};
 use rocket_contrib::json::JsonValue;
-use std::fmt::Debug;
 use serde::Serialize;
+use serde_json::json;
+use std::fmt::Debug;
 
 pub struct ApiResponse<T>
     where T: Serialize
@@ -34,12 +35,12 @@ impl<'r, T> Responder<'r> for ApiResponse<T>
     where T: Serialize
 {
     fn respond_to(self, req: &Request) -> rocket::response::Result<'r> {
-        let body = if self.is_error() {
-            JsonValue(json!(self.error.unwrap()))
+        let body: serde_json::Value = if self.is_error() {
+            json!(self.error.unwrap())
         } else {
-            JsonValue(json!(self.result.unwrap()))
+            json!(self.result.unwrap())
         };
-        Response::build_from(body.respond_to(&req).unwrap())
+        Response::build_from(JsonValue(body).respond_to(&req).unwrap())
             .status(self.status)
             .header(ContentType::JSON)
             .ok()

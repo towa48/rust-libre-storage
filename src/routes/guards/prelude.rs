@@ -1,20 +1,25 @@
-use rocket::Request;
+use rocket::{Outcome, Request};
 use rocket::http::Status;
-use rocket::request::FromRequest;
-use crate::providers::users::{get_user,UserInfo};
+use rocket::request::{FromRequest};
 use crate::crypto::get_password_hash;
+use crate::models::User;
+use crate::providers::{UsersProvider,IUsersProvider,DbConnection};
+use crate::routes::guards::WebDavAuth;
+
+/*
+ * WebDavAuth
+ */
 
 const ERR_NO_BASIC: &'static str = "No basic authorization";
 const ERR_WRONG_CREDENTIALS: &'static str = "Wrong credentials";
-
-pub struct WebDavAuth {
-    pub user: UserInfo,
-}
 
 impl<'a, 'r> FromRequest<'a, 'r> for WebDavAuth {
     type Error = &'static str;
 
     fn from_request(request: &'a Request<'r>) -> rocket::request::Outcome<Self, Self::Error> {
+        use crate::providers::prelude::*;
+
+        let users_provider = request.guard::<UsersProvider>()?;
         let auth_pair: Vec<&str> = request.headers().get_one("Authorization").unwrap_or("")
             .split_whitespace()
             .collect();
@@ -31,11 +36,11 @@ impl<'a, 'r> FromRequest<'a, 'r> for WebDavAuth {
                 if username.is_none() || password.is_none() {
                     return rocket::Outcome::Failure((Status::Unauthorized, ERR_WRONG_CREDENTIALS));
                 }
-                let user = get_user(username.unwrap());
+                let user = users_provider.get_user(username.unwrap());
                 if user.is_none() {
                     return rocket::Outcome::Failure((Status::Unauthorized, ERR_WRONG_CREDENTIALS));
                 }
-                let exist_user = user.unwrap();
+                let exist_user: User = user.unwrap();
                 let password_hash = get_password_hash(&password.unwrap(), &exist_user.salt);
                 if password_hash != exist_user.password_hash {
                     return rocket::Outcome::Failure((Status::Unauthorized, ERR_WRONG_CREDENTIALS));
@@ -45,6 +50,25 @@ impl<'a, 'r> FromRequest<'a, 'r> for WebDavAuth {
                 })
             },
             _ => rocket::Outcome::Failure((Status::Unauthorized, ERR_NO_BASIC))
+        }
+    }
+}
+
+/*
+ * UsersProvider
+ */
+
+impl<'a, 'r> FromRequest<'a, 'r> for UsersProvider {
+    type Error = &'static str;
+
+    fn from_request(request: &'a Request<'r>) -> rocket::request::Outcome<Self, Self::Error> {
+        let conn_outcome = request.guard::<DbConnection>();
+        match conn_outcome {
+            Outcome::Success(conn) => {
+                let users_provider = UsersProvider::new(conn); // TODO: use pool
+                Outcome::Success(users_provider)
+            },
+            _ => panic!("Expected DbConnection outcome!")
         }
     }
 }

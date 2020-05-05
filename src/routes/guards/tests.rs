@@ -4,7 +4,8 @@ mod test {
     use rocket::http::Status;
     use rocket::request::FromRequest;
 
-    use crate::utils::webdav_auth::WebDavAuth;
+    use crate::routes::guards::WebDavAuth;
+    use crate::routes::guards::prelude::*;
 
     #[test]
     fn should_return_unauthorized_when_no_header() {

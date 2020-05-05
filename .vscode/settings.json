@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}\\libre_storage.db",
+            "dialect": "SQLite",
+            "name": "libre_storage"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
