@@ -3,7 +3,7 @@
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate diesel;
-#[macro_use] extern crate rocket_contrib;
+extern crate rocket_contrib;
 extern crate chrono;
 extern crate dotenv;
 extern crate pbkdf2;

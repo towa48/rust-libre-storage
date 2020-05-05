@@ -20,9 +20,9 @@ impl<T> ApiResponse<T>
     pub fn ok(value: T) -> Self {
         ApiResponse { result: Some(value), status: Status::Ok, error: None }
     }
-    pub fn warn(value: T, status: Status) -> Self {
-        ApiResponse { result: Some(value), status: status, error: None }
-    }
+    // pub fn warn(value: T, status: Status) -> Self {
+    //     ApiResponse { result: Some(value), status: status, error: None }
+    // }
     pub fn err(error: &'static str, error_description: &'static str, status: Status) -> Self {
         ApiResponse { result: None, status: status, error: Some(ApiError::new(error, error_description)) }
     }
