@@ -32,8 +32,6 @@ impl<'a> TokenResponse<'a> {
 
 #[post("/token", format = "json", data = "<request>")]
 pub fn token(request: Json<Credentials>, provider: UsersProvider) -> ApiResponse<TokenResponse> {
-    use crate::providers::prelude::*;
-
     let user: Option<User> = provider.get_user(request.user.to_owned());
     if user.is_none() {
         return ApiResponse::<TokenResponse>::err(ERR_UNAUTHORIZED, "", Status::Unauthorized);
